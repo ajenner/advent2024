@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class Runner {
     static boolean runSamples = true;
-    static String[] sampleAnswers1 = new String[]        {"11"};
-    static String[] sampleAnswers2 = new String[]        {"31"};
-    static boolean[] hasDifferentSamples = new boolean[] {false};
+    static String[] sampleAnswers1 = new String[]        {"11", "2", "161"};
+    static String[] sampleAnswers2 = new String[]        {"31", "4", "48"};
+    static boolean[] hasDifferentSamples = new boolean[] {false, false, true};
 
     public static void main(String[] args) throws Exception {
-        String[] days = new String[] {"01"};
+        String[] days = new String[] {"01", "02", "03"};
         boolean[] parts = new boolean[] {true, false};
 
         for (String day : days) {
@@ -29,7 +29,7 @@ public class Runner {
                 ArrayList<String> inputs = reader.readAsStrings();
                 Method m = cls.getMethod("timeAndLogResult", String.class, boolean.class, ArrayList.class);
                 m.invoke(cls.getDeclaredConstructor().newInstance(), day, part, inputs);
-                System.out.println("");
+                System.out.println();
             }
         }
     }

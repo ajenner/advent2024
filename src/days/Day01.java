@@ -3,7 +3,6 @@ package days;
 import templates.DayTemplate;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Day01 extends DayTemplate {
 
