@@ -1,0 +1,83 @@
+package util;
+
+import java.io.File;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+/**
+ * Created by ajenner
+ */
+public class Reader {
+    private final File file;
+
+    public Reader(String fileName) {
+        this.file = new File(fileName);
+    }
+
+    public ArrayList<Integer> readAsIntegers() {
+        ArrayList<Integer> inputList = new ArrayList<>();
+        try {
+            Scanner scanner = new Scanner(this.file);
+            while (scanner.hasNext()) {
+                inputList.add(scanner.nextInt());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inputList;
+    }
+
+    public ArrayList<Integer> readAsIntegers(String splitPattern) {
+        ArrayList<Integer> inputList = new ArrayList<>();
+        try {
+            Scanner scanner = new Scanner(this.file);
+            String[] input = scanner.nextLine().split(splitPattern);
+            for (String s : input) {
+                inputList.add(Integer.parseInt(s));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inputList;
+    }
+
+    public LinkedList<BigInteger> readAsLinkedBigIntegers(String splitPattern) {
+        LinkedList<BigInteger> inputList = new LinkedList<>();
+        try {
+            Scanner scanner = new Scanner(this.file);
+            String[] input = scanner.nextLine().split(splitPattern);
+            for (String s : input) {
+                inputList.add(new BigInteger(s));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inputList;
+    }
+
+    public ArrayList<String> readAsStrings() {
+        ArrayList<String> inputList = new ArrayList<>();
+        try {
+            Scanner scanner = new Scanner(this.file);
+            while (scanner.hasNext()) {
+                inputList.add(scanner.nextLine());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inputList;
+    }
+
+    public static Integer readInput() {
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter input: ");
+            return scanner.nextInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+}
