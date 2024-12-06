@@ -2,12 +2,12 @@ package common;
 
 import java.util.Objects;
 
-public class Tuple <A, B, C> {
+public class Triple <A, B, C> {
     A a;
     B b;
     C c;
 
-    public Tuple (A a, B b, C c) {
+    public Triple (A a, B b, C c) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -15,11 +15,10 @@ public class Tuple <A, B, C> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Tuple)) {
+        if (!(o instanceof Triple triple)) {
             return false;
         }
-        var t = (Tuple) o;
-        return this.a.equals(t.a) && this.b.equals(t.b) && this.c.equals(t.c);
+        return this.a.equals(triple.a) && this.b.equals(triple.b) && this.c.equals(triple.c);
     }
 
     @Override
