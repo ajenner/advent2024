@@ -36,15 +36,14 @@ public class Day06 extends DayTemplate {
         guard.walk();
         for (int y = 0; y < inputs.size(); y++) {
             for (int x = 0; x < inputs.get(y).length(); x++) {
-                if (inputs.get(y).charAt(x) != 'X') {
-                    continue;
+                if (inputs.get(y).charAt(x) == 'X') {
+                    ArrayList<String> cloneMap = (ArrayList<String>) inputs.clone();
+                    char[] chars = cloneMap.get(y).toCharArray();
+                    chars[x] = 'O';
+                    cloneMap.set(y, String.valueOf(chars));
+                    guard.resetToStartWithNewMap(startX, startY, '^', cloneMap);
+                    guard.walk();
                 }
-                ArrayList<String> cloneMap = (ArrayList<String>) inputs.clone();
-                char[] chars = cloneMap.get(y).toCharArray();
-                chars[x] = 'O';
-                cloneMap.set(y, String.valueOf(chars));
-                guard.resetToStartWithNewMap(startX, startY, '^', cloneMap);
-                guard.walk();
             }
         }
         return guard.potentialCycles;

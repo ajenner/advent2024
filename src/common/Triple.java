@@ -3,9 +3,9 @@ package common;
 import java.util.Objects;
 
 public class Triple <A, B, C> {
-    A a;
-    B b;
-    C c;
+    public A a;
+    public B b;
+    public C c;
 
     public Triple (A a, B b, C c) {
         this.a = a;
@@ -24,6 +24,10 @@ public class Triple <A, B, C> {
     @Override
     public int hashCode() {
         return Objects.hash(a, b, c);
+    }
+
+    public String prettyPrint() {
+        return "A: " + this.a + " B: " + this.b + " C: " + this.c;
     }
 
 }
