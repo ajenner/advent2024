@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class Runner {
     static boolean runSamples = true;
-    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41"};
-    static String[] sampleAnswers2 = new String[]        {"31", "4", "48" , "9",  "123", "6"};
-    static boolean[] hasDifferentSamples = new boolean[] {false, false, true, false, false, false};
+    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749"};
+    static String[] sampleAnswers2 = new String[]        {"31", "4", "48" , "9",  "123", "6", "11387"};
+    static boolean[] hasDifferentSamples = new boolean[] {false, false, true, false, false, false, false};
 
     public static void main(String[] args) throws Exception {
-        String[] days = new String[] {"01", "02", "03", "04", "05", "06"};
+        String[] days = new String[] {"01", "02", "03", "04", "05", "06", "07"};
         boolean[] parts = new boolean[] {true, false};
 
         for (String day : days) {
