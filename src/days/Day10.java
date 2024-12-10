@@ -40,7 +40,7 @@ public class Day10 extends DayTemplate {
 
         int score = 0;
         Point nextPoint;
-        for (Point.Direction dir : Point.Direction.values()) {
+        for (Point.Direction dir : Point.Direction.ORTHOGONALS) {
             nextPoint = currentPoint.moveDirection(dir);
             if (validStep(nextPoint, inputs, currentChar, visited)) {
                 score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
@@ -56,7 +56,7 @@ public class Day10 extends DayTemplate {
 
         int rating = 0;
         Point nextPoint;
-        for (Point.Direction dir : Point.Direction.values()) {
+        for (Point.Direction dir : Point.Direction.ORTHOGONALS) {
             nextPoint = currentPoint.moveDirection(dir);
             if (validStep(nextPoint, inputs, currentChar, visited)) {
                 visited.add(nextPoint);
