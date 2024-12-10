@@ -1,5 +1,6 @@
 package days;
 
+import common.Point;
 import templates.DayTemplate;
 
 import java.util.ArrayList;
@@ -10,8 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Day08 extends DayTemplate {
-
-    private record Point(int x, int y) {}
 
     private final HashMap<Character, ArrayList<Point>> antennas = new HashMap<>();
 
@@ -35,11 +34,11 @@ public class Day08 extends DayTemplate {
                 return;
             }
             for (var i = 0; i < value.size(); i++) {
-                var x = value.get(i).x;
-                var y = value.get(i).y;
+                var x = value.get(i).x();
+                var y = value.get(i).y();
                 for (var j = i + 1; j < value.size(); j++) {
-                    var maybeX = value.get(j).x;
-                    var maybeY = value.get(j).y;
+                    var maybeX = value.get(j).x();
+                    var maybeY = value.get(j).y();
 
                     var deltaX = x - maybeX;
                     var deltaY = y - maybeY;
@@ -52,29 +51,25 @@ public class Day08 extends DayTemplate {
                         antinodes.add(new Point(maybeX, maybeY));
                     }
 
-                    while (inBounds(antinode1, inputs.getFirst().length(), inputs.size())) {
+                    while (antinode1.inBounds(inputs.getFirst().length(), inputs.size())) {
                         antinodes.add(antinode1);
                         if (part1) {
                             break;
                         }
-                        antinode1 = new Point(antinode1.x + deltaX, antinode1.y + deltaY);
+                        antinode1 = new Point(antinode1.x() + deltaX, antinode1.y() + deltaY);
                     }
 
-                    while (inBounds(antinode2, inputs.getFirst().length(), inputs.size())) {
+                    while (antinode2.inBounds(inputs.getFirst().length(), inputs.size())) {
                         antinodes.add(antinode2);
                         if (part1) {
                             break;
                         }
-                        antinode2 = new Point(antinode2.x - deltaX, antinode2.y - deltaY);
+                        antinode2 = new Point(antinode2.x() - deltaX, antinode2.y() - deltaY);
                     }
                 }
             }
         });
         return antinodes;
-    }
-
-    private boolean inBounds (Point point, int maxWidth, int maxHeight) {
-        return point.x >= 0 && point.x < maxWidth && point.y >= 0 && point.y < maxHeight;
     }
 
     public Integer part1(ArrayList<String> inputs) {

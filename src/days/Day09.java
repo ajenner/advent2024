@@ -46,7 +46,7 @@ public class Day09 extends DayTemplate {
                     expandedDisk.add(j + 1, new Entry(potentialSpace.ID, potentialSpace.size - bitToMove.size));
                     i++;
                     break;
-                } else if (part1){
+                } else if (part1) {
                     expandedDisk.set(j, new Entry(bitToMove.ID, potentialSpace.size));
                     expandedDisk.set(i, new Entry(potentialSpace.ID, potentialSpace.size));
                     expandedDisk.add(i, new Entry(bitToMove.ID, bitToMove.size - potentialSpace.size));
