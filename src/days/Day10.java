@@ -8,32 +8,11 @@ import java.util.HashSet;
 
 public class Day10 extends DayTemplate {
 
-    public Integer part1(ArrayList<String> inputs) {
-        int count = 0;
-        for (int y = 0; y < inputs.size(); y++) {
-            for (int x = 0; x < inputs.get(y).length(); x++) {
-                if (inputs.get(y).charAt(x) == '0') {
-                    count += calculateTrailheadScore(inputs, new Point(x, y), '0', new HashSet<>());
-                }
-            }
+    private int calculateTrailheadScore(ArrayList<String> inputs, Point currentPoint, char currentChar, HashSet<Point> visited, boolean part1) {
+        if (part1) {
+            visited.add(currentPoint);
         }
-        return count;
-    }
 
-    public Integer part2(ArrayList<String> inputs) {
-        int count = 0;
-        for (int y = 0; y < inputs.size(); y++) {
-            for (int x = 0; x < inputs.get(y).length(); x++) {
-                if (inputs.get(y).charAt(x) == '0') {
-                    count += calculateTrailheadRating(inputs, new Point(x, y), '0', new HashSet<>());
-                }
-            }
-        }
-        return count;
-    }
-
-    private int calculateTrailheadScore(ArrayList<String> inputs, Point currentPoint, char currentChar, HashSet<Point> visited) {
-        visited.add(currentPoint);
         if (currentChar == '9') {
             return 1;
         }
@@ -43,28 +22,16 @@ public class Day10 extends DayTemplate {
         for (Point.Direction dir : Point.Direction.ORTHOGONALS) {
             nextPoint = currentPoint.moveDirection(dir);
             if (validStep(nextPoint, inputs, currentChar, visited)) {
-                score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
+                if (!part1) {
+                    visited.add(nextPoint);
+                }
+                score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited, part1);
+                if (!part1) {
+                    visited.remove(nextPoint);
+                }
             }
         }
         return score;
-    }
-
-    private int calculateTrailheadRating(ArrayList<String> inputs, Point currentPoint, char currentChar, HashSet<Point> visited) {
-        if (currentChar == '9') {
-            return 1;
-        }
-
-        int rating = 0;
-        Point nextPoint;
-        for (Point.Direction dir : Point.Direction.ORTHOGONALS) {
-            nextPoint = currentPoint.moveDirection(dir);
-            if (validStep(nextPoint, inputs, currentChar, visited)) {
-                visited.add(nextPoint);
-                rating += calculateTrailheadRating(inputs, nextPoint, (char) (currentChar + 1), visited);
-                visited.remove(nextPoint);
-            }
-        }
-        return rating;
     }
 
     private boolean validStep(Point nextPoint, ArrayList<String> inputs, char currentChar, HashSet<Point> visited) {
@@ -75,6 +42,14 @@ public class Day10 extends DayTemplate {
 
     @Override
     public Object solve(boolean part1, ArrayList<String> inputs) {
-        return (part1) ? part1(inputs).toString() : part2(inputs).toString();
+        int count = 0;
+        for (int y = 0; y < inputs.size(); y++) {
+            for (int x = 0; x < inputs.get(y).length(); x++) {
+                if (inputs.get(y).charAt(x) == '0') {
+                    count += calculateTrailheadScore(inputs, new Point(x, y), '0', new HashSet<>(), part1);
+                }
+            }
+        }
+        return Integer.toString(count);
     }
 }
