@@ -2,6 +2,7 @@ package days;
 
 import common.Point;
 import templates.DayTemplate;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -38,24 +39,12 @@ public class Day10 extends DayTemplate {
         }
 
         int score = 0;
-        Point nextPoint = currentPoint.moveUp();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
-        }
-
-        nextPoint = currentPoint.moveRight();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
-        }
-
-        nextPoint = currentPoint.moveDown();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
-        }
-
-        nextPoint = currentPoint.moveLeft();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
+        Point nextPoint;
+        for (Point.Direction dir : Point.Direction.values()) {
+            nextPoint = currentPoint.moveDirection(dir);
+            if (validStep(nextPoint, inputs, currentChar, visited)) {
+                score += calculateTrailheadScore(inputs, nextPoint, (char) (currentChar + 1), visited);
+            }
         }
         return score;
     }
@@ -66,37 +55,19 @@ public class Day10 extends DayTemplate {
         }
 
         int rating = 0;
-        Point nextPoint = currentPoint.moveUp();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            visited.add(nextPoint);
-            rating += calculateTrailheadRating(inputs, nextPoint, (char) (currentChar + 1), visited);
-            visited.remove(nextPoint);
-        }
-
-        nextPoint = currentPoint.moveRight();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            visited.add(nextPoint);
-            rating += calculateTrailheadRating(inputs, nextPoint, (char) (currentChar + 1), visited);
-            visited.remove(nextPoint);
-        }
-
-        nextPoint = currentPoint.moveDown();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            visited.add(nextPoint);
-            rating += calculateTrailheadRating(inputs, nextPoint, (char) (currentChar + 1), visited);
-            visited.remove(nextPoint);
-        }
-
-        nextPoint = currentPoint.moveLeft();
-        if (validStep(nextPoint, inputs, currentChar, visited)) {
-            visited.add(nextPoint);
-            rating += calculateTrailheadRating(inputs, nextPoint, (char) (currentChar + 1), visited);
-            visited.remove(nextPoint);
+        Point nextPoint;
+        for (Point.Direction dir : Point.Direction.values()) {
+            nextPoint = currentPoint.moveDirection(dir);
+            if (validStep(nextPoint, inputs, currentChar, visited)) {
+                visited.add(nextPoint);
+                rating += calculateTrailheadRating(inputs, nextPoint, (char) (currentChar + 1), visited);
+                visited.remove(nextPoint);
+            }
         }
         return rating;
     }
 
-    private boolean validStep (Point nextPoint, ArrayList<String> inputs, char currentChar, HashSet<Point> visited) {
+    private boolean validStep(Point nextPoint, ArrayList<String> inputs, char currentChar, HashSet<Point> visited) {
         return nextPoint.inBounds(inputs.getFirst().length(), inputs.size())
                 && !visited.contains(nextPoint)
                 && inputs.get(nextPoint.y()).charAt(nextPoint.x()) == currentChar + 1;
@@ -104,6 +75,6 @@ public class Day10 extends DayTemplate {
 
     @Override
     public Object solve(boolean part1, ArrayList<String> inputs) {
-        return (part1)? part1(inputs).toString() : part2(inputs).toString();
+        return (part1) ? part1(inputs).toString() : part2(inputs).toString();
     }
 }

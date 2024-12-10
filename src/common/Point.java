@@ -4,6 +4,13 @@ import days.Day10;
 
 public record Point(int x, int y) {
 
+    public enum Direction {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT
+    }
+
     public boolean inBounds (int maxWidth, int maxHeight) {
         return this.x >= 0 && this.x < maxWidth && this.y >= 0 && this.y < maxHeight;
     }
@@ -22,6 +29,15 @@ public record Point(int x, int y) {
 
     public Point moveLeft () {
         return new Point(this.x - 1, this.y);
+    }
+
+    public Point moveDirection(Direction direction) {
+        return switch (direction) {
+            case UP -> moveUp();
+            case RIGHT -> moveRight();
+            case DOWN -> moveDown();
+            case LEFT -> moveLeft();
+        };
     }
 
 }
