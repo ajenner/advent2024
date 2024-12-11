@@ -29,7 +29,7 @@ public class Day11 extends DayTemplate {
         return List.of(stone * 2024);
     }
 
-    private Long dynamicSteps(int steps) {
+    private Long performSteps(int steps) {
         List<Long> nextStones;
         for (int i = 0; i < steps; i++) {
             Map<Long, Long> nextCount = new HashMap<>();
@@ -47,6 +47,6 @@ public class Day11 extends DayTemplate {
     @Override
     public Object solve(boolean part1, ArrayList<String> inputs) {
         buildInitialStones(inputs);
-        return (part1) ? dynamicSteps(25).toString() : dynamicSteps(75).toString();
+        return (part1) ? performSteps(25).toString() : performSteps(75).toString();
     }
 }

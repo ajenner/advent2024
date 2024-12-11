@@ -5,17 +5,17 @@ import java.util.ArrayList;
 
 public class Runner {
     static boolean runSamples = true;
-    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749", "14", "1928", "36", "55312", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
+    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749", "14", "1928", "36", "55312",          "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
     static String[] sampleAnswers2 = new String[]        {"31", "4", "48" , "9",  "123", "6", "11387", "34", "2858", "81", "65601038650482", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
     static boolean[] hasDifferentSamples = new boolean[] {false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     public static void main(String[] args) throws Exception {
-        String[] days = new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"};
-        boolean[] parts = new boolean[] {true, false};
+        var days = new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"};
+        var parts = new boolean[] {true, false};
 
         for (String day : days) {
-            Class<?> cls = Class.forName("days.Day" + day);
-            boolean exclude = (boolean) cls.getMethod("exclude").invoke(cls.getDeclaredConstructor().newInstance());
+            var cls = Class.forName("days.Day" + day);
+            var exclude = (boolean) cls.getMethod("exclude").invoke(cls.getDeclaredConstructor().newInstance());
             if (exclude) {
                 System.out.println("Excluding day" + day + "\n");
                 continue;
@@ -25,9 +25,9 @@ public class Runner {
                 if (runSamples && !samplePassed) {
                     continue;
                 }
-                Reader reader = new Reader("src/data/day" + day + ".txt");
-                ArrayList<String> inputs = reader.readAsStrings();
-                Method m = cls.getMethod("timeAndLogResult", String.class, boolean.class, ArrayList.class);
+                var reader = new Reader("src/data/day" + day + ".txt");
+                var inputs = reader.readAsStrings();
+                var m = cls.getMethod("timeAndLogResult", String.class, boolean.class, ArrayList.class);
                 m.invoke(cls.getDeclaredConstructor().newInstance(), day, part, inputs);
                 System.out.println();
             }
@@ -39,16 +39,16 @@ public class Runner {
             return true;
         }
         System.out.print("Sample ");
-        int index = Integer.parseInt(day) - 1;
-        Reader reader = new Reader("src/test/day" + day + "sample" + ((hasDifferentSamples[index] && !part1)? "2" : "") + ".txt");
-        ArrayList<String> inputs = reader.readAsStrings();
-        Method m = cls.getMethod("timeAndLogResult", String.class, boolean.class, ArrayList.class);
-        String result = (String) m.invoke(cls.getDeclaredConstructor().newInstance(), day, part1, inputs);
-        String sampleAnswer = (part1) ? sampleAnswers1[index] : sampleAnswers2[index];
+        var index = Integer.parseInt(day) - 1;
+        var reader = new Reader("src/test/day" + day + "sample" + ((hasDifferentSamples[index] && !part1)? "2" : "") + ".txt");
+        var inputs = reader.readAsStrings();
+        var m = cls.getMethod("timeAndLogResult", String.class, boolean.class, ArrayList.class);
+        var result = m.invoke(cls.getDeclaredConstructor().newInstance(), day, part1, inputs);
+        var sampleAnswer = (part1) ? sampleAnswers1[index] : sampleAnswers2[index];
         if (sampleAnswer == null) {
             return true;
         }
-        boolean passed =  result.equals(sampleAnswer);
+        var passed = result.equals(sampleAnswer);
         if (!passed) {
             System.out.println("\nSample failed! Expected: " + sampleAnswer + " Actual: " + result + "\n");
         }
