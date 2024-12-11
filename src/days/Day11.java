@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Day11 extends DayTemplate {
 
-    Map<Long, Long> stones = new HashMap<>();
+    Map<Long, Long> stones;
 
     private void buildInitialStones(ArrayList<String> inputs) {
         stones = new HashMap<>();
