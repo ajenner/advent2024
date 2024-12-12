@@ -10,16 +10,16 @@ public class Day11 extends DayTemplate {
 
     private void buildInitialStones(ArrayList<String> inputs) {
         stones = new HashMap<>();
-        for (String stone : inputs.get(0).split(" ")) {
+        for (String stone : inputs.getFirst().split(" ")) {
             stones.put(Long.parseLong(stone), 1L);
         }
     }
 
     private List<Long> advanceState(Long stone) {
-        long numDigits = (long) (Math.log10(stone) + 1);
         if (stone == 0L) {
             return List.of(1L);
         }
+        long numDigits = (long) (Math.log10(stone) + 1);
         if (numDigits % 2 == 0) {
             var divisor = Math.pow(10, numDigits / 2);
             long left = (long) (stone / divisor);

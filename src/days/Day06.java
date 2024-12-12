@@ -53,85 +53,85 @@ public class Day06 extends DayTemplate {
     public Object solve(boolean part1, ArrayList<String> inputs) {
         return (part1)? part1(inputs).toString() : part2(inputs).toString();
     }
-}
 
-class Guard {
-    int x;
-    int y;
-    char direction;
-    Map<Character, Character> rotations = Map.of('^', '>',
-            '>', 'v',
-            'v', '<',
-            '<', '^');
-    int stepsTaken;
-    boolean finished;
-    int potentialCycles;
-    ArrayList<String> map;
-    ArrayList<Triple<Integer, Integer, Character>> seenCorners;
+    static class Guard {
+        int x;
+        int y;
+        char direction;
+        Map<Character, Character> rotations = Map.of('^', '>',
+                '>', 'v',
+                'v', '<',
+                '<', '^');
+        int stepsTaken;
+        boolean finished;
+        int potentialCycles;
+        ArrayList<String> map;
+        ArrayList<Triple<Integer, Integer, Character>> seenCorners;
 
 
-    public Guard (int x, int y, char direction, ArrayList<String> map) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        this.stepsTaken = 1;
-        this.finished = false;
-        this.potentialCycles = 0;
-        this.map = map;
-        this.seenCorners = new ArrayList<>();
-    }
+        public Guard (int x, int y, char direction, ArrayList<String> map) {
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+            this.stepsTaken = 1;
+            this.finished = false;
+            this.potentialCycles = 0;
+            this.map = map;
+            this.seenCorners = new ArrayList<>();
+        }
 
-    public int walk () {
-        while (!finished) {
-            switch (direction) {
-                case '^':
-                    step(0, -1);
-                    break;
-                case '>':
-                    step(1, 0);
-                    break;
-                case 'v':
-                    step(0, 1);
-                    break;
-                case '<':
-                    step(-1, 0);
-                    break;
+        public int walk () {
+            while (!finished) {
+                switch (direction) {
+                    case '^':
+                        step(0, -1);
+                        break;
+                    case '>':
+                        step(1, 0);
+                        break;
+                    case 'v':
+                        step(0, 1);
+                        break;
+                    case '<':
+                        step(-1, 0);
+                        break;
+                }
             }
+            return stepsTaken;
         }
-        return stepsTaken;
-    }
 
-    private void step (int deltaX, int deltaY) {
-        if (y + deltaY < 0 || y + deltaY >= map.size() || x + deltaX < 0 || x + deltaX >= map.get(y).length()) {
-            this.finished = true;
-            return;
-        }
-        if (map.get(y + deltaY).charAt(x + deltaX) == '#' || map.get(y + deltaY).charAt(x + deltaX) == 'O') {
-            var seenCorner = new Triple<>(x + deltaX, y + deltaY, direction);
-            if (seenCorners.contains(seenCorner)) {
+        private void step (int deltaX, int deltaY) {
+            if (y + deltaY < 0 || y + deltaY >= map.size() || x + deltaX < 0 || x + deltaX >= map.get(y).length()) {
                 this.finished = true;
-                potentialCycles++;
+                return;
             }
-            seenCorners.add(seenCorner);
-            this.direction = rotations.get(this.direction);
-            return;
+            if (map.get(y + deltaY).charAt(x + deltaX) == '#' || map.get(y + deltaY).charAt(x + deltaX) == 'O') {
+                var seenCorner = new Triple<>(x + deltaX, y + deltaY, direction);
+                if (seenCorners.contains(seenCorner)) {
+                    this.finished = true;
+                    potentialCycles++;
+                }
+                seenCorners.add(seenCorner);
+                this.direction = rotations.get(this.direction);
+                return;
+            }
+            if (map.get(y + deltaY).charAt(x + deltaX) == '.') {
+                char[] chars = map.get(y + deltaY).toCharArray();
+                chars[x + deltaX] = 'X';
+                map.set(y + deltaY, String.valueOf(chars));
+                stepsTaken++;
+            }
+            y = y + deltaY;
+            x = x + deltaX;
         }
-        if (map.get(y + deltaY).charAt(x + deltaX) == '.') {
-            char[] chars = map.get(y + deltaY).toCharArray();
-            chars[x + deltaX] = 'X';
-            map.set(y + deltaY, String.valueOf(chars));
-            stepsTaken++;
-        }
-        y = y + deltaY;
-        x = x + deltaX;
-    }
 
-    public void resetToStartWithNewMap (int x, int y, char direction, ArrayList<String> map) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        this.map = map;
-        this.finished = false;
-        this.seenCorners = new ArrayList<>();
+        public void resetToStartWithNewMap (int x, int y, char direction, ArrayList<String> map) {
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+            this.map = map;
+            this.finished = false;
+            this.seenCorners = new ArrayList<>();
+        }
     }
 }
