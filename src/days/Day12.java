@@ -9,36 +9,30 @@ import java.util.HashSet;
 public class Day12 extends DayTemplate {
 
     HashSet<Region> regions;
-    ArrayList<Point> visited;
+    HashSet<Point> visited;
 
     private void buildRegions(ArrayList<String> inputs) {
         regions = new HashSet<>();
-        visited = new ArrayList<>();
+        visited = new HashSet<>();
         for (int y = 0; y < inputs.size(); y++) {
             for (int x = 0; x < inputs.get(y).length(); x++) {
                 var nextPoint = new Point(x, y);
                 if (!visited.contains(nextPoint)) {
-                    populateRegion(null, inputs.get(y).charAt(x), nextPoint, inputs);
+                    var currentChar = inputs.get(y).charAt(x);
+                    var region = new Region(new HashSet<>(), currentChar);
+                    regions.add(region);
+                    populateRegion(region, currentChar, nextPoint, inputs);
                 }
             }
         }
     }
 
     private void populateRegion(Region currentRegion, char currentChar, Point currentPoint, ArrayList<String> inputs) {
-        if (currentRegion == null) {
-            currentRegion = new Region(new HashSet<>(), currentChar);
-            regions.add(currentRegion);
-        }
-
-        if (currentRegion.points.contains(currentPoint)) {
-            return;
-        }
-
         currentRegion.points.add(currentPoint);
         visited.add(currentPoint);
         for (Point.Direction dir : Point.Direction.ORTHOGONALS) {
             var nextPoint = validateNextPoint(currentPoint.moveDirection(dir), currentChar, inputs);
-            if (nextPoint != null) {
+            if (nextPoint != null && !currentRegion.points.contains(nextPoint)) {
                 populateRegion(currentRegion, currentChar, nextPoint, inputs);
             }
         }
