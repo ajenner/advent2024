@@ -22,4 +22,11 @@ public abstract class DayTemplate {
         return false;
     }
 
+    /**
+     * Allows cursed sample days to be excluded from execution
+     */
+    public boolean runSamples(boolean part1) {
+        return true;
+    }
+
 }

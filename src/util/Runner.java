@@ -4,13 +4,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class Runner {
-    static boolean runSamples = true;
-    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749", "14", "1928", "36", "55312",          "1930", "480", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
+    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749", "14", "1928", "36", "55312",          "1930", "480",          "12", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
     static String[] sampleAnswers2 = new String[]        {"31", "4", "48" , "9",  "123", "6", "11387", "34", "2858", "81", "65601038650482", "1206", "875318608908", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
     static boolean[] hasDifferentSamples = new boolean[] {false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
     public static void main(String[] args) throws Exception {
-        var days = new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"};
+        var days = new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"};
         var parts = new boolean[] {true, false};
 
         for (String day : days) {
@@ -22,6 +21,7 @@ public class Runner {
             }
             for (boolean part : parts) {
                 boolean samplePassed = runSamples(cls, day, part);
+                var runSamples = (boolean) cls.getMethod("runSamples", boolean.class).invoke(cls.getDeclaredConstructor().newInstance(), part);
                 if (runSamples && !samplePassed) {
                     continue;
                 }
@@ -35,7 +35,9 @@ public class Runner {
     }
 
     private static boolean runSamples(Class<?> cls, String day, boolean part1) throws Exception {
+        var runSamples = (boolean) cls.getMethod("runSamples", boolean.class).invoke(cls.getDeclaredConstructor().newInstance(), part1);
         if (!runSamples) {
+            System.out.println("Excluding Day" + day + " samples");
             return true;
         }
         System.out.print("Sample ");

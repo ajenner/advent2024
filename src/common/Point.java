@@ -54,6 +54,14 @@ public record Point(int x, int y) {
         return new Point(this.x - 1, this.y + 1);
     }
 
+    public Point moveWithDeltas(int deltaX, int deltaY) {
+        return new Point(this.x + deltaX, this.y + deltaY);
+    }
+
+    public Point moveWithDeltasAndWrap(int deltaX, int deltaY, int maxX, int maxY) {
+        return new Point(Math.floorMod(this.x + deltaX, maxX), Math.floorMod(this.y + deltaY, maxY));
+    }
+
     public Point moveDirection (Direction direction) {
         return switch (direction) {
             case UP -> moveUp();
