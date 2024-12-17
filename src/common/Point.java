@@ -2,7 +2,16 @@ package common;
 
 import java.util.EnumSet;
 
-public record Point(int x, int y) {
+public record Point(int x, int y) implements Comparable<Point> {
+
+    @Override
+    public int compareTo(Point o) {
+        if (this.y != o.y) {
+            return Integer.compare(this.y, o.y);
+        } else {
+            return Integer.compare(this.x, o.x);
+        }
+    }
 
     public enum Direction {
         UP,

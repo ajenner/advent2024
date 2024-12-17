@@ -31,11 +31,12 @@ public class Day17 extends DayTemplate {
             program.addFirst(remainingOperations.removeLast());
             var programString = String.join(",", program.stream().map(Long::toString).toList());
             Computer computer;
-            a--;
-            do {
+            computer = new Computer(a, initialB, initialC, operations);
+            computer.runComputer(true, program);
+            while (!computer.returnOutput().equals(programString)) {
                 computer = new Computer(++a, initialB, initialC, operations);
                 computer.runComputer(true, program);
-            } while (!computer.returnOutput().equals(programString));
+            }
             if (!remainingOperations.isEmpty()) {
                 a = a << 3;
             }
@@ -49,9 +50,9 @@ public class Day17 extends DayTemplate {
     }
 
     private static class Computer {
-        long registerA = 0;
-        long registerB = 0;
-        long registerC = 0;
+        long registerA;
+        long registerB;
+        long registerC;
 
         List<Integer> operations;
         List<Integer> output = new ArrayList<>();
