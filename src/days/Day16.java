@@ -3,95 +3,124 @@ package days;
 import common.Point;
 import templates.DayTemplate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Day16 extends DayTemplate {
 
     public int dijkstra(ArrayList<String> inputs, boolean part1) {
-        var queue = new PriorityQueue<Entry>();
-        var visited = new HashSet<CityBlock>();
-        int endX = inputs.getFirst().length() - 1;
-        int endY = inputs.size() - 1;
+        var queue = new PriorityQueue<Node>();
+        var visited = new HashSet<Entry>();
+        int endX = inputs.getFirst().length() - 2;
+        int endY = 1;
+        int shortest = -1;
+        var viewingSpots = new HashSet<Point>();
 
-        CityBlock rightStart = new CityBlock(new Point(1, 0), 1, Point.Direction.RIGHT);
-        CityBlock downStart = new CityBlock(new Point(0, 1), 1, Point.Direction.DOWN);
-        queue.add(new Entry(rightStart, Character.getNumericValue(inputs.get(rightStart.p().y()).charAt(rightStart.p().x()))));
-        queue.add(new Entry(downStart, Character.getNumericValue(inputs.get(downStart.p().y()).charAt(downStart.p().x()))));
+        var rightStart = new Node(new Entry(new Point(1, inputs.size() - 2), Point.Direction.RIGHT), 0, null);
+        queue.add(rightStart);
 
         while (!queue.isEmpty()) {
             var current = queue.poll();
-            if (visited.contains(current.node)) {
+            if (part1 && visited.contains(current.node())) {
                 continue;
             }
-            visited.add(current.node);
-            if (current.node.p().x() == endX && current.node.p().y() == endY) {
-                return current.heatLoss;
+            if (current.node().point().x() == endX && current.node().point().y() == endY) {
+                if (shortest == -1) {
+                    if (part1) {
+                        return current.distance();
+                    }
+                    shortest = current.distance();
+                }
+                if (shortest == current.distance()) {
+                    viewingSpots.addAll(current.path());
+                }
             }
-            queue.addAll(current.getNeighbours(inputs));
+            visited.add(current.node());
+            if (part1) {
+                queue.addAll(current.getNeighbours(inputs));
+            } else {
+                for (var next : current.getNeighbours(inputs)) {
+                    if (!visited.contains(next.node())) {
+                        queue.add(next);
+                    }
+                }
+            }
         }
-        return 0;
+        return viewingSpots.size();
     }
 
     @Override
     public Object solve(boolean part1, ArrayList<String> inputs) {
         return String.valueOf(dijkstra(inputs, part1));
     }
-}
 
-record CityBlock(Point p, int cost, Point.Direction direction) {}
+    record Node(Entry node, int distance, Node previous) implements Comparable<Node> {
 
-class Entry implements Comparable<Entry> {
+        public Set<Node> getNeighbours(ArrayList<String> inputs) {
+            Set<Node> neighbours = new HashSet<>();
+            var left = getNextNode(inputs, node.point().rotateDirectionLeft90Degrees(node.direction()));
+            if (left != null) {
+                neighbours.add(left);
+            }
 
-    public CityBlock node;
-    public int heatLoss;
+            var right = getNextNode(inputs, node.point().rotateDirectionRight90Degrees(node.direction()));
+            if (right != null) {
+                neighbours.add(right);
+            }
 
-    public Entry(CityBlock node, int heatLoss) {
-        this.node = node;
-        this.heatLoss = heatLoss;
+            var straight = getNextNode(inputs, node.direction());
+            if (straight != null) {
+                neighbours.add(straight);
+            }
+
+            return neighbours;
+        }
+
+        private Node getNextNode(ArrayList<String> inputs, Point.Direction nextDirection) {
+            Node nextNode;
+            if (node.direction() == nextDirection) {
+                nextNode = new Node(new Entry(node.point().moveDirection(nextDirection), nextDirection), distance + 1, this);
+            } else {
+                nextNode = new Node(new Entry(node.point(), nextDirection), distance + 1000, this);
+            }
+            if (validMove(inputs, nextNode.node.point())) {
+                return nextNode;
+            }
+            return null;
+        }
+
+        private boolean validMove(ArrayList<String> inputs, Point nextPoint) {
+            return nextPoint.inBounds(inputs.getFirst().length(), inputs.size()) && inputs.get(nextPoint.y()).charAt(nextPoint.x()) != '#';
+        }
+
+        public Set<Point> path() {
+            Set<Point> path = new HashSet<>();
+            var node = this;
+            while (node != null) {
+                path.add(node.node.point());
+                node = node.previous;
+            }
+            return path;
+        }
+
+        @Override
+        public int compareTo(final Node o) {
+            if (distance != o.distance) {
+                return Integer.compare(distance, o.distance);
+            } else {
+                return node.compareTo(o.node);
+            }
+        }
     }
 
-    public List<Entry> getNeighbours(ArrayList<String> inputs) {
-        List<Entry> neighbours = new ArrayList<>();
-        var left = getNextEntry(inputs, node.p().rotateDirectionLeft90Degrees(node.direction()));
-        if (left != null) {
-            neighbours.add(left);
-        }
+    record Entry(Point point, Point.Direction direction) implements Comparable<Entry> {
 
-        var right = getNextEntry(inputs, node.p().rotateDirectionRight90Degrees(node.direction()));
-        if (right != null) {
-            neighbours.add(right);
-        }
-
-        var straight = getNextEntry(inputs, node.direction());
-        if (straight != null) {
-            neighbours.add(straight);
-        }
-
-        return neighbours;
-    }
-
-
-    private Entry getNextEntry(ArrayList<String> inputs, Point.Direction nextDirection) {
-        var nextCityBlock = new CityBlock(node.p().moveDirection(nextDirection), node.direction() == nextDirection ? node.cost() + 1 : 1, nextDirection);
-        if (nextCityBlock.p().inBounds(inputs.getFirst().length(), inputs.size())) {
-            return new Entry(nextCityBlock, this.heatLoss + Character.getNumericValue(inputs.get(nextCityBlock.p().y()).charAt(nextCityBlock.p().x())));
-        }
-        return null;
-    }
-
-    @Override
-    public int compareTo(Entry o) {
-        if (this.heatLoss != o.heatLoss) {
-            return Integer.compare(this.heatLoss, o.heatLoss);
-        } else if (this.node.direction() == o.node.direction() && this.node.cost() != o.node.cost()) {
-            return Integer.compare(this.node.cost(), o.node.cost());
-        } else if (this.node.p().y() != o.node.p().y()) {
-            return Integer.compare(this.node.p().y(), o.node.p().y());
-        } else {
-            return Integer.compare(this.node.p().x(), o.node.p().x());
+        @Override
+        public int compareTo(final Entry o) {
+            if (this.point.y() != o.point.y()) {
+                return Integer.compare(this.point.y(), o.point.y());
+            } else {
+                return Integer.compare(this.point.x(), o.point.x());
+            }
         }
     }
 }
