@@ -15,38 +15,6 @@ public class Day15 extends DayTemplate {
     static int maxX = 0;
     static int maxY = 0;
 
-    private void moveRobot() {
-        for (Point.Direction instruction : instructions) {
-            robot = robot.moveDirection(instruction);
-        }
-    }
-
-    private void printMap(Point.Direction direction) {
-        System.out.println(direction);
-        for (int y = 0; y < maxY; y++) {
-            for (int x = 0; x < maxX; x++) {
-                var point = new Point(x, y);
-                if (Objects.equals(robot.point, point)) {
-                    System.out.print("@");
-                } else if (walls.contains(point)) {
-                    System.out.print("#");
-                } else if (boxes.stream().anyMatch(box -> box.leftPoint(point))) {
-                    System.out.print("[");
-                } else if (boxes.stream().anyMatch(box -> box.rightPoint(point))) {
-                    System.out.print("]");
-                } else {
-                    System.out.print(".");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    private Long calculateGPS() {
-        return boxes.stream().mapToLong(Box::calculateGPS).sum();
-    }
-
     private void buildMapLinePart1(ArrayList<String> inputs, int y) {
         for (int x = 0; x < inputs.get(y).length(); x++) {
             if (maxX == 0) {
@@ -95,8 +63,8 @@ public class Day15 extends DayTemplate {
         maxX = 0;
         maxY = 0;
         walls = new HashSet<>();
-        instructions = new ArrayList<>();
         boxes = new HashSet<>();
+        instructions = new ArrayList<>();
         for (int y = 0; y < inputs.size(); y++) {
             if (inputs.get(y).contains("#")) {
                 int twiceX = 0;
@@ -124,6 +92,16 @@ public class Day15 extends DayTemplate {
                 }
             }
         }
+    }
+
+    private void moveRobot() {
+        for (Point.Direction instruction : instructions) {
+            robot = robot.moveDirection(instruction);
+        }
+    }
+
+    private Long calculateGPS() {
+        return boxes.stream().mapToLong(Box::calculateGPS).sum();
     }
 
     @Override
@@ -229,4 +207,25 @@ public class Day15 extends DayTemplate {
         }
     }
 
+    private void printMap(Point.Direction direction) {
+        System.out.println(direction);
+        for (int y = 0; y < maxY; y++) {
+            for (int x = 0; x < maxX; x++) {
+                var point = new Point(x, y);
+                if (Objects.equals(robot.point, point)) {
+                    System.out.print("@");
+                } else if (walls.contains(point)) {
+                    System.out.print("#");
+                } else if (boxes.stream().anyMatch(box -> box.leftPoint(point))) {
+                    System.out.print("[");
+                } else if (boxes.stream().anyMatch(box -> box.rightPoint(point))) {
+                    System.out.print("]");
+                } else {
+                    System.out.print(".");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 }

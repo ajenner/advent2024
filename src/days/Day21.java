@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class Day21 extends DayTemplate {
 
-    public static Long part1(ArrayList<String> inputs) {
+    public Long part1(ArrayList<String> inputs) {
         return -1L;
     }
 
-    public static Long part2(ArrayList<String> inputs) {
+    public Long part2(ArrayList<String> inputs) {
         return -1L;
     }
 
