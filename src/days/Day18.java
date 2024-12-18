@@ -10,13 +10,12 @@ public class Day18 extends DayTemplate {
     static HashSet<Point> corrupted = new HashSet<>();
     static int endX = 70;
     static int endY = 70;
-    int iters = 1024;
 
     public int dijkstra() {
         var queue = new PriorityQueue<Node>();
         var visited = new HashSet<Point>();
 
-        var start = new Node(new Point(0, 0), 0, null);
+        var start = new Node(new Point(0, 0), 0);
 
         queue.add(start);
 
@@ -34,22 +33,28 @@ public class Day18 extends DayTemplate {
         return 0;
     }
 
-    private void buildCorruptedMemory(ArrayList<String> inputs) {
-        for (int i = 0; i < iters; i++) {
+    private void buildCorruptedMemory(ArrayList<String> inputs, int iters) {
+        corrupted = new HashSet<>();
+        for (int i = 0; i < iters && i < inputs.size(); i++) {
             var byteLoc = inputs.get(i).split("\\D+");
             corrupted.add(new Point(Integer.parseInt(byteLoc[0]), Integer.parseInt(byteLoc[1])));
         }
     }
 
-    private String buildAndCheck(ArrayList<String> inputs) {
-        var distance = dijkstra();
-        var i = 1024;
-        var byteLoc = new String[]{"0", "0"};
-        while (distance != 0) {
-            byteLoc = inputs.get(i++).split("\\D+");
-            corrupted.add(new Point(Integer.parseInt(byteLoc[0]), Integer.parseInt(byteLoc[1])));
-            distance = dijkstra();
+    private String part2(ArrayList<String> inputs) {
+        var i = inputs.size() / 2;
+        var j = inputs.size();
+        while (i <= j) {
+            int mid = i + (j - i) / 2;
+            buildCorruptedMemory(inputs, mid);
+            var distance = dijkstra();
+            if (distance != 0) {
+                i = mid + 1;
+            } else {
+                j = mid - 1;
+            }
         }
+        var byteLoc = inputs.get(i - 1).split("\\D+");
         return byteLoc[0] + "," + byteLoc[1];
     }
 
@@ -58,18 +63,17 @@ public class Day18 extends DayTemplate {
         return false;
     }
 
-    @Override
-    public boolean exclude() {
-        return true;
+    public Integer part1(ArrayList<String> inputs) {
+        buildCorruptedMemory(inputs, 1024);
+        return dijkstra();
     }
 
     @Override
     public Object solve(boolean part1, ArrayList<String> inputs) {
-        buildCorruptedMemory(inputs);
-        return part1 ? String.valueOf(dijkstra()) : buildAndCheck(inputs);
+        return part1 ? part1(inputs).toString() : part2(inputs);
     }
 
-    record Node(Point point, int distance, Node previous) implements Comparable<Node> {
+    record Node(Point point, int distance) implements Comparable<Node> {
 
         public Set<Node> getNeighbours() {
             Set<Node> neighbours = new HashSet<>();
@@ -83,8 +87,8 @@ public class Day18 extends DayTemplate {
             return neighbours;
         }
 
-        private Node getNextNode( Point.Direction nextDirection) {
-            Node nextNode = new Node(point.moveDirection(nextDirection), distance + 1, this);
+        private Node getNextNode(Point.Direction nextDirection) {
+            Node nextNode = new Node(point.moveDirection(nextDirection), distance + 1);
 
             if (validMove(nextNode.point)) {
                 return nextNode;
@@ -98,11 +102,7 @@ public class Day18 extends DayTemplate {
 
         @Override
         public int compareTo(final Node o) {
-            if (distance != o.distance) {
-                return Integer.compare(distance, o.distance);
-            } else {
-                return point.compareTo(o.point);
-            }
+            return Integer.compare(distance, o.distance);
         }
     }
 }
