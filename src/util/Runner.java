@@ -4,12 +4,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class Runner {
-    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749", "14", "1928", "36", "55312",          "1930", "480",          "12", "10092", "7036", "4,6,3,5,6,3,5,2,1,0", "22", "6", "1", "1", "1", "1", "1", "1"};
-    static String[] sampleAnswers2 = new String[]        {"31", "4", "48" , "9",  "123", "6", "11387", "34", "2858", "81", "65601038650482", "1206", "875318608908", "1",  "9021",  "45",   "117440",              "1",  "16", "1", "1", "1", "1", "1", "1"};
+    static String[] sampleAnswers1 = new String[]        {"11", "2", "161", "18", "143", "41", "3749", "14", "1928", "36", "55312",          "1930", "480",          "12", "10092", "7036", "4,6,3,5,6,3,5,2,1,0", "22", "6", "1", "126384", "1", "1", "1", "1"};
+    static String[] sampleAnswers2 = new String[]        {"31", "4", "48" , "9",  "123", "6", "11387", "34", "2858", "81", "65601038650482", "1206", "875318608908", "1",  "9021",  "45",   "117440",              "1",  "16", "1", "154115708116294", "1", "1", "1", "1"};
     static boolean[] hasDifferentSamples = new boolean[] {false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false};
 
     public static void main(String[] args) throws Exception {
-        var days = new String[] {"19"};
+        var days = new String[] {"21"};
         var parts = new boolean[] {true, false};
 
         for (String day : days) {
